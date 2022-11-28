@@ -1,5 +1,6 @@
-const { ComponentDialog, WaterfallDialog, TextPrompt } = require('botbuilder-dialogs');
-const { WATERFALL_BUY_INFO_DIALOG, CONFIRM_PURCHASE_TEXT_PROMPT } = require('../constants/PromptsDialogsId');
+const { CardFactory, MessageFactory } = require('botbuilder');
+const { ComponentDialog, WaterfallDialog, TextPrompt, ChoicePrompt } = require('botbuilder-dialogs');
+const { WATERFALL_BUY_INFO_DIALOG, CONFIRM_PURCHASE_TEXT_PROMPT, NOT_CONFIRMED_PURCHASE_CHOICE } = require('../constants/PromptsDialogsId');
 
 class BuyInfosDialog extends ComponentDialog {
     constructor(userState) {
@@ -10,9 +11,12 @@ class BuyInfosDialog extends ComponentDialog {
         this.addDialog(new WaterfallDialog(WATERFALL_BUY_INFO_DIALOG, [
             this.showCart.bind(this),
             this.confirmPurchase.bind(this),
-            this.handleDialog.bind(this)
+            this.handleDialog.bind(this),
+            this.askAction.bind(this),
+            this.lastHandleDialog.bind(this)
         ]))
-            .addDialog(new TextPrompt(CONFIRM_PURCHASE_TEXT_PROMPT, this.confirmValidator.bind(this)));
+            .addDialog(new TextPrompt(CONFIRM_PURCHASE_TEXT_PROMPT, this.confirmValidator.bind(this)))
+            .addDialog(new ChoicePrompt(NOT_CONFIRMED_PURCHASE_CHOICE, this.askValidator.bind(this)));
     }
 
     async showCart(stepContext) {
@@ -45,7 +49,7 @@ ${ bikeNames }
     async confirmValidator(stepContext) {
         const { entity } = stepContext.context.luis;
 
-        return entity.type === 'yes';
+        return entity.type === 'yes' || entity.type === 'no';
     }
 
     async handleDialog(stepContext) {
@@ -53,6 +57,39 @@ ${ bikeNames }
         if (entity.type === 'yes') {
             return stepContext.replaceDialog('ConfirmedPurchaseDialog');
         }
+        return stepContext.next();
+    }
+
+    async askAction(stepContext) {
+        const options = [
+            'Retirar um item do carrinho',
+            'Adicionar mais bicicletas ao carrinho',
+            'Desistir da compra'
+        ];
+
+        const card = CardFactory.heroCard(undefined, undefined, options, undefined);
+        const prompt = MessageFactory.attachment(card);
+
+        stepContext.context.sendActivity('O que você deseja fazer então?');
+        return stepContext.prompt(NOT_CONFIRMED_PURCHASE_CHOICE, { prompt });
+    }
+
+    async askValidator(stepContext) {
+        const input = stepContext.context.activity.text;
+        const options = [
+            'Retirar um item do carrinho',
+            'Adicionar mais bicicletas ao carrinho',
+            'Desistir da compra'
+        ];
+
+        return options.includes(input);
+    }
+
+    async lastHandleDialog(stepContext) {
+        const input = stepContext.context.activity.text;
+        if (new RegExp(/(Retirar um item do carrinho)/, 'i').test(input)) {}
+        if (new RegExp(/(Adicionar mais bicicletas ao carrinho)/, 'i').test(input)) return stepContext.replaceDialog('MenuDialog');
+        if (new RegExp(/(Desistir da compra)/, 'i')) return stepContext.replaceDialog('FinalDialog');
     }
 }
 module.exports.BuyInfosDialog = BuyInfosDialog;

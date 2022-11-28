@@ -1,6 +1,6 @@
 const { ComponentDialog, WaterfallDialog, TextPrompt } = require('botbuilder-dialogs');
 const { WATERFALL_PERSONAL_INFOS_DIALOG, FULLNAME_TEXT_PROMPT, CPF_TEXT_PROMPT, PHONE_TEXT_PROMPT, CONFIRM_INFOS_TEXT_PROMPT } = require('../constants/PromptsDialogsId');
-
+const cpfFormater = require('../utils/cpfFormater');
 class PersonalInfosDialog extends ComponentDialog {
     constructor(userState) {
         super('PersonalInfosDialog');
@@ -11,7 +11,8 @@ class PersonalInfosDialog extends ComponentDialog {
             this.fullname.bind(this),
             this.cpf.bind(this),
             this.phone.bind(this),
-            this.confirmInfos.bind(this)
+            this.confirmInfos.bind(this),
+            this.handleDialog.bind(this)
         ]))
             .addDialog(new TextPrompt(FULLNAME_TEXT_PROMPT))
             .addDialog(new TextPrompt(CPF_TEXT_PROMPT, this.cpfValidator.bind(this)))
@@ -61,7 +62,7 @@ class PersonalInfosDialog extends ComponentDialog {
 5.Número: ${ userProfile.residenceNumber }\n
 6.Complemento: ${ userProfile.residenceComplement }\n
 7.Nome: ${ userProfile.name }\n
-8.CPF: ${ userProfile.cpf }\n
+8.CPF: ${ cpfFormater(userProfile.cpf) }\n
 9.Telefone ${ userProfile.phone }\n        
         `);
 
@@ -70,7 +71,12 @@ class PersonalInfosDialog extends ComponentDialog {
 
     async confirmValidator(stepContext) {
         const { entity } = stepContext.context.luis;
-        return entity.type === 'yes';
+        return entity.type === 'yes' || entity.type === 'no';
+    }
+
+    async handleDialog(stepContext) {
+        const { entity } = stepContext.context.luis;
+        if (entity.type === 'yes') return stepContext.replaceDialog('PurchasedDialog');
     }
 }
 module.exports.PersonalInfosDialog = PersonalInfosDialog;

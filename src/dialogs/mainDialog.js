@@ -11,6 +11,7 @@ const { GreetingDialog } = require('./greetingDialog');
 const { MenuDialog } = require('./menuDialog');
 const { PersonalInfosDialog } = require('./personalInfosDialog');
 const { PriceDialog } = require('./priceDialog');
+const { PurchasedDialog } = require('./purchasedDialog');
 const { TypeDialog } = require('./typeDialog');
 
 class MainDialog extends ComponentDialog {
@@ -29,6 +30,7 @@ class MainDialog extends ComponentDialog {
             .addDialog(new ConfirmedPurchaseDialog(userState))
             .addDialog(new AddressDialog(userState))
             .addDialog(new PersonalInfosDialog(userState))
+            .addDialog(new PurchasedDialog(userState))
             .addDialog(new WaterfallDialog(WATERFALL_MAIN_DIALOG, [
                 this.introStep.bind(this)
             ]));
