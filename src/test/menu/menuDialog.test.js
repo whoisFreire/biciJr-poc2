@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const { ComponentDialog } = require('botbuilder-dialogs');
-const { DialogTestClient, DialogTestLogger } = require('botbuilder-testing');
+const { DialogTestClient } = require('botbuilder-testing');
 const { MenuDialog } = require('../../dialogs/menuDialog');
 const assert = require('assert');
 const sinon = require('sinon');
@@ -35,7 +35,7 @@ describe('MenuDialog', () => {
             );
 
             stubLuis = sinon.stub(luis, 'isReturnLuis');
-            client = new DialogTestClient('test', sut, null, [new DialogTestLogger()]);
+            client = new DialogTestClient('test', sut);
         });
 
         afterEach(() => {
@@ -81,7 +81,7 @@ describe('MenuDialog', () => {
             );
 
             stubLuis = sinon.stub(luis, 'isReturnLuis');
-            client = new DialogTestClient('test', sut, null, [new DialogTestLogger()]);
+            client = new DialogTestClient('test', sut);
         });
 
         afterEach(() => {
@@ -108,7 +108,7 @@ describe('MenuDialog', () => {
             );
 
             stubLuis = sinon.stub(luis, 'isReturnLuis');
-            client = new DialogTestClient('test', sut, null, [new DialogTestLogger()]);
+            client = new DialogTestClient('test', sut);
         });
 
         afterEach(() => {
@@ -135,7 +135,7 @@ describe('MenuDialog', () => {
             );
 
             stubLuis = sinon.stub(luis, 'isReturnLuis');
-            client = new DialogTestClient('test', sut, null, [new DialogTestLogger()]);
+            client = new DialogTestClient('test', sut);
         });
 
         afterEach(() => {

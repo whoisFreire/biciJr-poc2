@@ -26,6 +26,11 @@ class ColorDialog extends ComponentDialog {
     async menuValidator(stepContext) {
         const options = ['Branco', 'Preto', 'Azul', 'Rosa', 'Verde', 'Vermelha', 'Outras cores', 'Explorar outro filtro de pesquisa'];
         const choiced = stepContext.context.activity.text;
+
+        if (!options.includes(choiced)) {
+            stepContext.context.sendActivity('opção inválida, tente novamente.');
+            return options.includes(choiced);
+        }
         return options.includes(choiced);
     }
 

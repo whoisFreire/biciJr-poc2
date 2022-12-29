@@ -2,9 +2,8 @@
 const { ComponentDialog } = require('botbuilder-dialogs');
 const { DialogTestClient } = require('botbuilder-testing');
 const { describe, beforeEach } = require('mocha');
-const { TypeDialog } = require('../../dialogs/typeDialog');
 const assert = require('assert');
-
+const { GenderDialog } = require('../../dialogs/genderDialog');
 class MockComponent extends ComponentDialog {
     constructor(testDialog, ...mockDialogsId) {
         super('component');
@@ -22,13 +21,12 @@ class FakeDialog extends ComponentDialog {
         return innerDC.endDialog();
     }
 }
-
-describe('TypeDialog', () => {
+describe('GenderDialog', () => {
     let client;
 
     beforeEach(() => {
         const sut = new MockComponent(
-            new TypeDialog(),
+            new GenderDialog(),
             'BikeCardDialog',
             'MenuDialog'
         );
@@ -36,9 +34,9 @@ describe('TypeDialog', () => {
         client = new DialogTestClient('test', sut);
     });
 
-    it('deve mostrar a opcao de filtro de tipo', async () => {
+    it('deve mostrar a opcao de filtro de Genero', async () => {
         const reply = await client.sendActivity('oi');
-        assert.strictEqual(reply.text, 'Boa escolha! Vem comigo para selecionar a sua magrela. 🚲');
+        assert.strictEqual(reply.text, 'Legal! Então me diz **para quem** é a magrela que você está procurando? 🚲');
     });
 
     it('deve mostrar mensagem de opcao invalida ao digitar uma opcao invalida', async () => {
@@ -56,10 +54,10 @@ describe('TypeDialog', () => {
         assert.strictEqual(reply.text, 'BEGIN_MenuDialog');
     });
 
-    describe('opcao Infantil', async () => {
+    describe('opcao Unissex', async () => {
         it('Deve avançar para o dialog de card', async () => {
             let reply = await client.sendActivity('oi');
-            await client.sendActivity('Infantil');
+            await client.sendActivity('Unissex');
             reply = await client.getNextReply();
             assert.strictEqual(reply.text, 'BEGIN_BikeCardDialog');
         });

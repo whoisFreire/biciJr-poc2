@@ -14,6 +14,7 @@ class DialogBot extends ActivityHandler {
         this.userState = userState;
         this.dialog = dialog;
         this.dialogState = this.conversationState.createProperty('DialogState');
+        this.userProfile = this.conversationState.createProperty('UserProfile');
 
         this.onMessage(async (context, next) => {
             context.luis = await recognizer.start(luis, context);
@@ -25,7 +26,7 @@ class DialogBot extends ActivityHandler {
         this.onDialog(async (context, next) => {
             await this.conversationState.saveChanges(context, false);
             await this.userState.saveChanges(context, false);
-
+            await this.userProfile.saveChanges(context, false);
             await next();
         });
 

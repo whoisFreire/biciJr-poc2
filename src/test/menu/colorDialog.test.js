@@ -2,9 +2,8 @@
 const { ComponentDialog } = require('botbuilder-dialogs');
 const { DialogTestClient } = require('botbuilder-testing');
 const { describe, beforeEach } = require('mocha');
-const { TypeDialog } = require('../../dialogs/typeDialog');
+const { ColorDialog } = require('../../dialogs/colorDialog');
 const assert = require('assert');
-
 class MockComponent extends ComponentDialog {
     constructor(testDialog, ...mockDialogsId) {
         super('component');
@@ -23,12 +22,12 @@ class FakeDialog extends ComponentDialog {
     }
 }
 
-describe('TypeDialog', () => {
+describe('ColorDialog', () => {
     let client;
 
     beforeEach(() => {
         const sut = new MockComponent(
-            new TypeDialog(),
+            new ColorDialog(),
             'BikeCardDialog',
             'MenuDialog'
         );
@@ -36,9 +35,9 @@ describe('TypeDialog', () => {
         client = new DialogTestClient('test', sut);
     });
 
-    it('deve mostrar a opcao de filtro de tipo', async () => {
+    it('deve mostrar a opcao de filtro de cor', async () => {
         const reply = await client.sendActivity('oi');
-        assert.strictEqual(reply.text, 'Boa escolha! Vem comigo para selecionar a sua magrela. 🚲');
+        assert.strictEqual(reply.text, 'Qual a cor que você quer para a sua bicicleta? 🚲');
     });
 
     it('deve mostrar mensagem de opcao invalida ao digitar uma opcao invalida', async () => {
@@ -56,10 +55,10 @@ describe('TypeDialog', () => {
         assert.strictEqual(reply.text, 'BEGIN_MenuDialog');
     });
 
-    describe('opcao Infantil', async () => {
+    describe('opcao Branca', async () => {
         it('Deve avançar para o dialog de card', async () => {
             let reply = await client.sendActivity('oi');
-            await client.sendActivity('Infantil');
+            await client.sendActivity('Branco');
             reply = await client.getNextReply();
             assert.strictEqual(reply.text, 'BEGIN_BikeCardDialog');
         });

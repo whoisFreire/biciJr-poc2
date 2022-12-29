@@ -2,7 +2,7 @@ const { CardFactory, MessageFactory } = require('botbuilder');
 const { ComponentDialog, WaterfallDialog, ChoicePrompt, TextPrompt } = require('botbuilder-dialogs');
 const { WATERFALL_CARD_BIKE_DIALOG, MENU_BIKE_CARD_CHOICE, BUY_TEXT_PROMPT, SOMETHING_MORE_CHOICE } = require('../constants/PromptsDialogsId');
 
-const { getBikes } = require('../utils/filterBikes');
+const getBikes = require('../utils/filterBikes');
 
 class BikeCardDialog extends ComponentDialog {
     constructor(userState) {
@@ -34,7 +34,7 @@ class BikeCardDialog extends ComponentDialog {
 
         const { count } = userProfile;
         const { filter, subfilter } = stepContext.options;
-        const bikes = await getBikes(filter, subfilter);
+        const bikes = await getBikes.getBikes(filter, subfilter);
         const hasBikes = bikes.length;
         if (!hasBikes) {
             stepContext.context.sendActivity('infelizmente nao temos bikes com esse tipo de filtro');
@@ -93,6 +93,12 @@ ${ bikes[count].brand }\n
             'Encerrar'
         ];
         const choiced = stepContext.context.activity.text;
+
+        if (!options.includes(choiced)) {
+            stepContext.context.sendActivity('opção inválida, tente novamente.');
+            return options.includes(choiced);
+        }
+
         return options.includes(choiced);
     }
 

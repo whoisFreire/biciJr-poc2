@@ -27,6 +27,10 @@ class GenderDialog extends ComponentDialog {
         const options = ['Unissex', 'Masculino', 'Feminino', 'Explorar outro filtro de pesquisa'];
         const choiced = stepContext.context.activity.text;
 
+        if (!options.includes(choiced)) {
+            stepContext.context.sendActivity('opção inválida, tente novamente.');
+            return options.includes(choiced);
+        }
         return options.includes(choiced);
     }
 

@@ -28,6 +28,11 @@ class PriceDialog extends ComponentDialog {
         const options = ['Até R$ 500,00', 'De R$ 500,00 até R$ 1500,00', 'De R$ 1500,00 até R$ 3000,00', 'Mais de R$ 3000,00', 'Explorar outro filtro de pesquisa'];
         const choiced = stepContext.context.activity.text;
 
+        if (!options.includes(choiced)) {
+            stepContext.context.sendActivity('opção inválida, tente novamente.');
+            return options.includes(choiced);
+        }
+
         return options.includes(choiced);
     }
 

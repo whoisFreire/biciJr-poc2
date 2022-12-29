@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const { DialogTestClient, DialogTestLogger } = require('botbuilder-testing');
+const { DialogTestClient } = require('botbuilder-testing');
 const { describe } = require('mocha');
 const { GreetingDialog } = require('../dialogs/greetingDialog');
 const assert = require('assert');
@@ -35,7 +35,7 @@ describe('GreetingDialog', () => {
         );
 
         // const sut = new GreetingDialog();
-        const client = new DialogTestClient('test', sut, null, [new DialogTestLogger()]);
+        const client = new DialogTestClient('test', sut);
         let reply = await client.sendActivity('oi');
 
         assert.strictEqual(reply.text, 'Oi! Eu sou o **Bici JR**, sou craque em pedaladas e vou funcionar como um guidão para te guiar na sua busca! 🚴');

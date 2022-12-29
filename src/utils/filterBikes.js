@@ -23,14 +23,14 @@ function filterBikes(filter, subFilter, data) {
     return bikesByFilter;
 };
 
-async function getBikes(filter, subfilter) {
-    const response = await BikeApi.fetch();
-    const { data } = response;
-    if (new RegExp(/(Outras cores)/, 'i').test(subfilter)) {
-        return data;
+module.exports = {
+    async getBikes(filter, subfilter) {
+        const response = await BikeApi.fetch();
+        const { data } = response;
+        if (new RegExp(/(Outras cores)/, 'i').test(subfilter)) {
+            return data;
+        }
+        const bikes = filterBikes(filter, subfilter, data);
+        return bikes;
     }
-    const bikes = filterBikes(filter, subfilter, data);
-    return bikes;
 };
-
-module.exports.getBikes = getBikes;
