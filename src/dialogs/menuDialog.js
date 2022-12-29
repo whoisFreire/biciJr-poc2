@@ -1,6 +1,8 @@
 const { CardFactory, MessageFactory } = require('botbuilder');
 const { ComponentDialog, WaterfallDialog, ChoicePrompt } = require('botbuilder-dialogs');
 const { WATERFALL_MENU_DIALOG, MENU_CHOICE } = require('../constants/PromptsDialogsId');
+const luis = require('../utils/isReturnLuis');
+
 class MenuDialog extends ComponentDialog {
     constructor() {
         super('MenuDialog');
@@ -28,17 +30,21 @@ class MenuDialog extends ComponentDialog {
     }
 
     async menuValidator(stepContext) {
-        const { entity } = stepContext.context.luis;
-        if (!entity) {
+        const luisReturn = luis.isReturnLuis(stepContext.context.luis);
+
+        const entityType = luisReturn.entity.type;
+
+        if (!entityType) {
             stepContext.context.sendActivity('opção inválida, tente novamente.');
-            return !!entity;
+            return !!entityType;
         }
-        return !!entity;
+        return !!entityType;
     }
 
     async handleMenuStep(stepContext) {
-        const { entity } = stepContext.context.luis;
-        const entityType = entity.type;
+        const luisReturn = luis.isReturnLuis(stepContext.context.luis);
+
+        const entityType = luisReturn.entity.type;
         if (entityType === 'type') {
             return stepContext.replaceDialog('TypeDialog');
         }

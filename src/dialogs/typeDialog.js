@@ -28,6 +28,10 @@ class TypeDialog extends ComponentDialog {
         const options = ['Infantil', 'Casual', 'Estrada', 'Mountain Bike', 'Elétrica', 'Explorar outro filtro de pesquisa'];
         const choiced = stepContext.context.activity.text;
 
+        if (!options.includes(choiced)) {
+            stepContext.context.sendActivity('opção inválida, tente novamente.');
+            return options.includes(choiced);
+        }
         return options.includes(choiced);
     }
 
