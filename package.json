@@ -9,8 +9,8 @@
         "start": "node ./index.js",
         "watch": "nodemon ./index.js",
         "lint": "eslint .",
-        "test": "mocha src/test/**/**.test.js",
-        "coverage": "nyc mocha src/test/**/**.test.js"
+        "test": "mocha src/test/**",
+        "coverage": "nyc mocha src/test/**"
     },
     "repository": {
         "type": "git",

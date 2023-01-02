@@ -2,6 +2,7 @@ const { ComponentDialog, WaterfallDialog, TextPrompt } = require('botbuilder-dia
 const { WATERFALL_CEP_DIALOG, CEP_TEXT_PROMPT, RESIDENCE_NUMBER_TEXT_PROMPT, RESIDENCE_COMPLEMENT_TEXT_PROMPT } = require('../constants/PromptsDialogsId');
 
 const { cepApi } = require('../services/cepApi');
+const luis = require('../utils/isReturnLuis');
 
 class AddressDialog extends ComponentDialog {
     constructor(userState) {
@@ -26,12 +27,12 @@ class AddressDialog extends ComponentDialog {
     }
 
     async cepValidator(stepContext) {
-        const { entity } = stepContext.context.luis;
+        const { entity } = luis.isReturnLuis(stepContext.context.luis);
         return entity.type === 'cep';
     }
 
     async requestAddress(stepContext) {
-        const cep = stepContext.context.luis.entity.text;
+        const cep = luis.isReturnLuis(stepContext.context.luis.entity.text);
         const { data } = await cepApi.fetch(cep);
         if (data.erro) {
             return stepContext.next();

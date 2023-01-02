@@ -24,8 +24,7 @@ class FinalDialog extends ComponentDialog {
     }
 
     async ratingFlow(stepContext) {
-        stepContext.context.sendActivity(`Como você **avalia** o meu
-        atendimento?`);
+        stepContext.context.sendActivity('Como você **avalia** o meu atendimento?');
 
         const options = ['5 - Amei muito ❤️', '4 - Gostei 😃', '3 - Nem amei, nem odiei 😐', '2 - Poderia melhorar ☹️', '1 - Não gostei 😡'];
         const card = CardFactory.heroCard(undefined, undefined, options, undefined);
@@ -36,6 +35,12 @@ class FinalDialog extends ComponentDialog {
     async choiceValidator(stepContext) {
         const options = ['5 - Amei muito ❤️', '4 - Gostei 😃', '3 - Nem amei, nem odiei 😐', '2 - Poderia melhorar ☹️', '1 - Não gostei 😡'];
         const choiced = stepContext.context.activity.text;
+
+        if (!options.includes(choiced)) {
+            stepContext.context.sendActivity('opção inválida, tente novamente.');
+            return options.includes(choiced);
+        }
+
         return options.includes(choiced);
     }
 
@@ -49,8 +54,7 @@ class FinalDialog extends ComponentDialog {
             return stepContext.prompt(BAD_RESPONSE_FINAL_CHOICE, 'Que pena! 😞 Lamento não ter atingido suas expectativas! Como meu atendimento **poderia ser melhor?**');
         }
 
-        stepContext.context.sendActivity(`Muito obrigado pela avaliação! 👍
-        Adorei falar com você!`);
+        stepContext.context.sendActivity('Muito obrigado pela avaliação! 👍 Adorei falar com você!');
         stepContext.context.sendActivity('Qualquer dúvida para comprar sua bike, estou sempre por aqui!');
         return stepContext.endDialog();
     }
