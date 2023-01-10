@@ -1,9 +1,10 @@
 /* eslint-disable no-undef */
-const { default: axios } = require('axios');
+const assert = require('chai').assert;
+const axios = require('axios');
 const { beforeEach, describe, afterEach } = require('mocha');
 const Sinon = require('sinon');
-const assert = require('assert');
 const bikes = require('../data/bikeData');
+const { Api } = require('../../services/bikeApi/api');
 
 describe('BikeApi/api', () => {
     let apiStub;
@@ -16,7 +17,14 @@ describe('BikeApi/api', () => {
     });
 
     it('deve retornar o result da requisicao', async () => {
-        const result = apiStub.resolves({ data: bikes });
-        assert.deepStrictEqual(result, { data: bikes });
+        const expected = { data: bikes, statusText: 'OK' };
+        apiStub.resolves(expected);
+        const result = await Api.prototype.fetch();
+        assert.equal(result, expected);
+    });
+
+    it('deve retornar um erro caso ocorra um erro na requisicao', async () => {
+        apiStub.throws();
+        assert.throws();
     });
 });
